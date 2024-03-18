@@ -49,21 +49,7 @@ const router = createRouter({
       name: "后台管理",
       component: () => import("../views/AdminManage.vue"),
       children: [
-        {
-          path: "",
-          name: "后台首页",
-          component: () => import("../views/admin/AdminIndex.vue"),
-        },
-        {
-          path: "bloginfo",
-          name: "博客信息",
-          component: () => import("../views/admin/BlogInfo.vue"),
-        },
-        {
-          path: "TypeInfo",
-          name: "分类信息",
-          component: () => import("../views/admin/TypeInfo.vue"),
-        },
+        
       ],
     },
     {
