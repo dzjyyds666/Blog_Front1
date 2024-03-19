@@ -9,10 +9,10 @@
       <!-- 导航栏 -->
       <div>
         <div class="navigation-bar-sty">
-          <router-link to="#"> 个人信息 </router-link>
+          <router-link to="/amsystem/info"> 个人信息 </router-link>
         </div>
         <div class="navigation-bar-sty">
-          <router-link to="#"> 博客信息 </router-link>
+          <router-link to="/amsystem/blog"> 博客信息 </router-link>
         </div>
         <div class="navigation-bar-sty">
           <router-link to="#"> 分类信息 </router-link>
@@ -41,6 +41,8 @@
           </template>
         </a-dropdown>
       </div>
+
+      <router-view></router-view>
     </div>
   </div>
 </template>

@@ -8,6 +8,12 @@ const app = createApp(App)
 // 引入字体css
 import '@/assets/font/font.css';
 
+
+//引入表格组件
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+app.use(VXETable)
+
 //引入 ant design
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
