@@ -15,7 +15,7 @@
           <router-link to="/amsystem/blog"> 博客信息 </router-link>
         </div>
         <div class="navigation-bar-sty">
-          <router-link to="#"> 分类信息 </router-link>
+          <router-link to="/amsystem/type"> 分类信息 </router-link>
         </div>
         <div class="navigation-bar-sty">
           <router-link to="#"> 杂项设置 </router-link>

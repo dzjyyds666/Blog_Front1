@@ -63,6 +63,11 @@ const router = createRouter({
           name: "博客信息页",
           component:()=>import('../views/backend/Blog.vue')
         },
+        {
+          path:"type",
+          name:"分类详情页",
+          component:()=>import('../views/backend/Type.vue')
+        }
       ],
     },
     {
