@@ -18,6 +18,9 @@
           <router-link to="/amsystem/type"> 分类信息 </router-link>
         </div>
         <div class="navigation-bar-sty">
+          <router-link to="/amsystem/edit"> 博客编辑 </router-link>
+        </div>
+        <div class="navigation-bar-sty">
           <router-link to="#"> 杂项设置 </router-link>
         </div>
       </div>

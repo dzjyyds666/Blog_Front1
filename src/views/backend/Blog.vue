@@ -12,12 +12,22 @@
       <div style="margin: 10px 0 10px 20px">标签:</div>
       <a-select
         v-model:value="searchInfo.tag"
-        style="width: 120px; margin: 10px 20px 10px 5px"
+        style="width: 90px; margin: 10px 10px 10px 5px"
         allowClear
       >
         <div v-for="item in tags" :key="item">
           <a-select-option :value="item">{{ item }}</a-select-option>
         </div>
+      </a-select>
+      <!-- 状态选择 -->
+      <div style="margin: 10px 0 10px 20px">状态:</div>
+      <a-select
+        v-model:value="searchInfo.status"
+        style="width: 60px; margin: 10px 10px 10px 5px"
+        allowClear
+      >
+        <a-select-option :value="1">1</a-select-option>
+        <a-select-option :value="0">0</a-select-option>
       </a-select>
       <!-- 分类 -->
       <div style="margin: 10px 0 10px 10px">分类:</div>
@@ -51,7 +61,7 @@
         <a-button
           type="text"
           @click="showModel"
-          style="margin: 10px 0 10px 20px"
+          style="margin: 10px 0 10px 10px"
           class="button-sty"
         >
           删除
@@ -78,6 +88,7 @@
       <vxe-column type="seq" width="100"></vxe-column>
       <vxe-column field="title" title="标题"></vxe-column>
       <vxe-column field="tag" title="标签"></vxe-column>
+      <vxe-column field="status" title="状态"></vxe-column>
       <vxe-column field="types" title="分类" width="300"></vxe-column>
       <vxe-column field="createTime" title="编辑时间"></vxe-column>
       <vxe-column field="updateTime" title="更新时间"></vxe-column>
@@ -98,11 +109,13 @@ export default {
           title: "速成java",
           tag: "原创",
           types: ["java", "python"],
+          status: 1,
         },
         {
           id: 1,
           title: "速成java",
           tag: "原创",
+          status: 0,
         },
         {
           id: 1,
@@ -151,6 +164,7 @@ export default {
         beginTime: null,
         endTime: null,
         type: [],
+        status:null,
       },
       tags: ["原创", "转载", "翻译", "抄袭", "原创", "转载", "翻译", "抄袭"],
       types: ["原创", "转载", "翻译", "抄袭", "原创", "转载", "翻译", "抄袭"],

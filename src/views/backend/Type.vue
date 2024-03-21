@@ -15,14 +15,53 @@
       >
         搜索
       </a-button>
-      <a-button
-        type="text"
-        @click="submitSearchInfo"
-        style="margin: 10px 0 10px 20px;width: 8vw;"
-        class="button-sty"
-      >
-        修改分类名
-      </a-button>
+
+      <div>
+        <a-button
+          type="text"
+          @click="showModel1"
+          style="margin: 10px 0 10px 20px; width: 8vw"
+          class="button-sty"
+        >
+          修改分类名
+        </a-button>
+        <a-modal v-model:open="open1" @ok="changeTypeName">
+          <template #footer>
+            <a-button key="back" @click="handleCancel1">取消</a-button>
+            <a-button key="submit" type="primary" @click="changeTypeName"
+              >确认</a-button
+            >
+          </template>
+          <a-input
+            v-model:value="changedName"
+            addon-before="分类名"
+            style="width: 20vw; margin: 10px 23%"
+          />
+        </a-modal>
+      </div>
+      <div>
+        <a-button
+          type="text"
+          @click="showModel2"
+          style="margin: 10px 0 10px 20px; width: 8vw"
+          class="button-sty"
+        >
+          添加分类
+        </a-button>
+        <a-modal v-model:open="open2" @ok="addType">
+          <template #footer>
+            <a-button key="back" @click="handleCancel2">取消</a-button>
+            <a-button key="submit" type="primary" @click="addType"
+              >确认</a-button
+            >
+          </template>
+          <a-input
+            v-model:value="addTypeName"
+            addon-before="分类名"
+            style="width: 20vw; margin: 10px 23%"
+          />
+        </a-modal>
+      </div>
       <div>
         <a-button
           type="text"
@@ -44,7 +83,13 @@
       </div>
     </div>
 
-    <vxe-table ref="table" :data="typeData" max-height="80%" align="center" header-align="center">
+    <vxe-table
+      ref="table"
+      :data="typeData"
+      max-height="80%"
+      align="center"
+      header-align="center"
+    >
       <vxe-column type="checkbox" width="40"></vxe-column>
       <vxe-column type="seq" width="100"></vxe-column>
       <vxe-column field="typeName" title="分类名"></vxe-column>
@@ -56,111 +101,136 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue';
+import { message } from "ant-design-vue";
 
 export default {
   data() {
     return {
       typeName: null,
-      open:false,
-      typeData:[
+      open: false,
+      open1:false,
+      open2:false,
+      changedName:null,
+      addTypeName:null,
+      typeData: [
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
         },
         {
-          id:1,
-          typeName:"java",
-          blogNumber:10,
-          createTime:"2021-1-1",
-          updateTime:"2024-1-1",
-        }
-      ]
+          id: 1,
+          typeName: "java",
+          blogNumber: 10,
+          createTime: "2021-1-1",
+          updateTime: "2024-1-1",
+        },
+      ],
     };
   },
-  methods:{
-    submitSearchInfo(){
-        console.log(this.typeName)
+  methods: {
+    submitSearchInfo() {
+      console.log(this.typeName);
     },
-    showModel(){
-      this.open = true
+    showModel() {
+      this.open = true;
     },
-    deleteType(){
+    showModel1(){
+      this.open1 = true;
+    },
+    showModel2(){
+      this.open2 = true;
+    },
+    deleteType() {
       this.open = false;
-      message.success("success")
+      message.success("success");
       const selectedRows = this.$refs.table.getCheckboxRecords();
-      console.log(selectedRows)
+      console.log(selectedRows);
     },
-    handleCancel(){
+    handleCancel() {
       this.open = false;
+    },
+    handleCancel1() {
+      this.open1 = false;
+    },
+    handleCancel2() {
+      this.open2 = false;
+    },
+    changeTypeName() {
+      const selectedRows = this.$refs.table.getCheckboxRecords();
+      console.log(selectedRows,this.changedName);
+      this.open1 = false
+    },
+    addType(){
+      console.log(this.addTypeName);
+      this.open2 = false;
     }
-  }
+  },
 };
 </script>
 
