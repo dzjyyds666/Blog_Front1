@@ -21,7 +21,7 @@
           <router-link to="/amsystem/edit"> 博客编辑 </router-link>
         </div>
         <div class="navigation-bar-sty">
-          <router-link to="#"> 杂项设置 </router-link>
+          <router-link to="/amsystem/setting"> 杂项设置 </router-link>
         </div>
       </div>
     </div>
@@ -35,6 +35,11 @@
           </span>
           <template #overlay>
             <a-menu>
+              <a-menu-item>
+                <router-link to="/blog">
+                  <span style="font-size: small"> 返回主页 </span>
+                </router-link>
+              </a-menu-item>
               <a-menu-item>
                 <router-link to="#">
                   <span style="font-size: small"> 退出登陆 </span>

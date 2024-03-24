@@ -164,7 +164,7 @@ export default {
         beginTime: null,
         endTime: null,
         type: [],
-        status:null,
+        status: null,
       },
       tags: ["原创", "转载", "翻译", "抄袭", "原创", "转载", "翻译", "抄袭"],
       types: ["原创", "转载", "翻译", "抄袭", "原创", "转载", "翻译", "抄袭"],

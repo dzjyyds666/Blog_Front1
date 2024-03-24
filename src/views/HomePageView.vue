@@ -72,7 +72,7 @@
           </a-dropdown>
         </span>
         <span class="header-sty">
-          <router-link to="/amsystem" class="a-sty">
+          <router-link to="/amsystem/info" class="a-sty">
             <img src="../assets/img/实验室.svg" alt="" style="width: 20px" />
             实验室
           </router-link>

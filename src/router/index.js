@@ -11,6 +11,7 @@ const router = createRouter({
       path: "/blog",
       name: "home",
       component: () => import("../views/HomePageView.vue"),
+      meta: { isAuth: false },
       children: [
         {
           path: "",
@@ -48,41 +49,66 @@ const router = createRouter({
       path: "/amsystem",
       name: "后台管理",
       component: () => import("../views/AdminManage.vue"),
+      meta: { isAuth: true },
       children: [
         {
-          path:"",
-          redirect:"amsystem/info",
+          path: "",
+          redirect: "amsystem/info",
         },
         {
           path: "info",
           name: "个人信息页",
-          component:()=>import('../views/backend/Info.vue')
+          component: () => import("../views/backend/Info.vue"),
         },
         {
           path: "blog",
           name: "博客信息页",
-          component:()=>import('../views/backend/Blog.vue')
+          component: () => import("../views/backend/Blog.vue"),
         },
         {
-          path:"type",
-          name:"分类详情页",
-          component:()=>import('../views/backend/Type.vue')
+          path: "type",
+          name: "分类详情页",
+          component: () => import("../views/backend/Type.vue"),
         },
         {
-          path:"edit",
-          name:"编辑博客页面",
-          component:()=>import('../views/backend/BlogEditor.vue')
-        }
+          path: "edit",
+          name: "编辑博客页面",
+          component: () => import("../views/backend/BlogEditor.vue"),
+        },
+        {
+          path: "setting",
+          name: "杂项设置",
+          component: () => import("../views/backend/Settings.vue"),
+        },
       ],
     },
     {
       path: "/blog/detail/:id?",
       name: "博客详情页",
       component: () => import("../views/blog/BlogDetail.vue"),
+      meta: { isAuth: false },
+    },
+    {
+      path: "/login",
+      name: "登陆页面",
+      meta: { isAuth: false },
+      component: () => import("../views/Login.vue"),
     },
   ],
 });
 
+// 路由守卫，判断是否登录，如果已登录，则直接放行，反之，跳转到登录页面
+router.beforeEach((to, from, next) => {
+  //如果路由需要验证登录状态
+  if(to.meta.isAuth == true){
+    if(localStorage.getItem("token")){
+      next()
+    }else{
+      next("/login")
+    }
+  }else{
+    next()
+  }
+});
+
 export default router;
-
-
