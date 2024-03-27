@@ -2,12 +2,12 @@
   <div class="body-sty">
     <div style="display: flex; flex-wrap: wrap">
       <img
-        :src="user.avatarUrl"
+        :src="user.avatar"
         alt=""
         style="width: 10vw; margin: 10px 27.5vw; border-radius: 360px"
       />
       <a-input
-        v-model:value="user.avatarUrl"
+        v-model:value="user.avatar"
         addon-before="头像"
         style="width: 60vw; margin: 10px 0"
       />
@@ -39,9 +39,17 @@
       <v-md-editor v-model="user.introduction"></v-md-editor>
 
       <div>
-        <a-button class="button-sty" @click="showModal" type="text">保存修改</a-button>
+        <a-button class="button-sty" @click="showModal" type="text"
+          >保存修改</a-button
+        >
         <a-modal v-model:open="open" @ok="changeInfo">
           是否提交对个人信息的修改？
+          <template #footer>
+          <a-button key="back" @click="handleCancel">取消</a-button>
+          <a-button key="submit" type="primary" @click="changeInfo"
+            >确认</a-button
+          >
+        </template>
         </a-modal>
       </div>
     </div>
@@ -49,31 +57,61 @@
 </template>
 
 <script>
+import axios from "@/api/user";
+import { message } from "ant-design-vue";
 export default {
   data() {
     return {
       visible: false,
-      open:false,
+      open: false,
       user: {
-        nickname: "Aaron",
-        email: "2529619036@qq.com",
-        account: "Aaroncool",
-        password: "1433223",
-        introduction: "Hello,Aaron! welcome",
-        avatarUrl:
-          "https://picx.zhimg.com/80/v2-c53bcf320c86d4eeb0ae59f82b926359_1440w.webp?source=1def8aca",
+        nickname: null,
+        email: null,
+        account: null,
+        password: null,
+        introduction: " ",
+        avatar: null,
       },
     };
   },
-  methods:{
-    changeInfo(){
-        console.log("提交成功")
-        this.open = false
+  methods: {
+    changeInfo() {
+      axios.postEditInfo(this.user).then((res)=>{
+      if(res.status == 201){
+        message.error("jwt无效，请重新登录");
+        setTimeout(function () {
+          window.location.href = "/login";
+        }, 3000);
+      }else {
+        message.success(res.data.message)
+      }
+    })
+      this.open = false;
     },
-    showModal(){
-        this.open = true
-    }
-  }
+    handleCancel(){
+      this.open = false;
+    },
+    showModal() {
+      this.open = true;
+    },
+  },
+  mounted() {
+    axios.getUserInfo().then((res) => {
+      if (res.status == 201) {
+        message.error("jwt无效，请重新登录");
+        setTimeout(function () {
+          window.location.href = "/login";
+        }, 2000);
+      } else {
+        this.user = res.data.data;
+        const newToken = res.headers.get("new-token");
+        if (newToken != null) {
+          // 将 new-token 存储在本地，用于后续的请求
+          localStorage.setItem("token", newToken);
+        }
+      }
+    })
+  },
 };
 </script>
 
@@ -94,8 +132,8 @@ export default {
   width: 10vw;
 }
 
-.button-sty:hover{
-    background-color: blueviolet;
-    color: white;
+.button-sty:hover {
+  background-color: blueviolet;
+  color: white;
 }
 </style>

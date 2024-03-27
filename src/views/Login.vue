@@ -1,8 +1,15 @@
 <template>
   <div class="background-sty">
     <div class="login-sty">
-
-        <div style="font-size: 50px;font-weight: 700;font-family: 'alimamafangyuanti'">请登录</div>
+      <div
+        style="
+          font-size: 50px;
+          font-weight: 700;
+          font-family: 'alimamafangyuanti';
+        "
+      >
+        请登录
+      </div>
       <a-form
         :model="User"
         name="basic"
@@ -31,7 +38,9 @@
           />
         </a-form-item>
         <a-form-item>
-          <a-button type="text" html-type="submit" class="button-sty">提交</a-button>
+          <a-button type="text" html-type="submit" class="button-sty"
+            >提交</a-button
+          >
         </a-form-item>
       </a-form>
     </div>
@@ -39,6 +48,8 @@
 </template>
 
 <script>
+import { message } from "ant-design-vue";
+import axios from "../api/login";
 export default {
   data() {
     return {
@@ -48,9 +59,24 @@ export default {
       },
     };
   },
+  mounted() {},
   methods: {
     onFinish() {
-      console.log(this.User);
+      axios
+        .postLogin(this.User)
+        .then((res) => {
+          console.log(res)
+          if(res.status == 200){
+
+            message.success("登录成功");
+            localStorage.setItem("token",res.data)
+            setTimeout(function(){
+              window.location.href="/amsystem/info"
+            },2000)
+          }else if(res.status == 201){
+            message.error(res.data)
+          }
+        })
     },
     onFinishFailed() {},
   },

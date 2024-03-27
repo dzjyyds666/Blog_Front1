@@ -41,9 +41,20 @@
                 </router-link>
               </a-menu-item>
               <a-menu-item>
-                <router-link to="#">
-                  <span style="font-size: small"> 退出登陆 </span>
-                </router-link>
+                <div style="text-align: center">
+                  <span style="font-size: small" @click="showModel">
+                    退出登录
+                  </span>
+                  <a-modal v-model:open="open">
+                    <template #footer>
+                      <a-button key="back" @click="handleCancel">取消</a-button>
+                      <a-button key="submit" type="primary" @click="handleOk"
+                        >确认</a-button
+                      >
+                    </template>
+                    是否退出登录？
+                  </a-modal>
+                </div>
               </a-menu-item>
             </a-menu>
           </template>
@@ -56,7 +67,34 @@
 </template>
 
 <script>
-export default {};
+import axios from "@/api/login";
+import { message } from "ant-design-vue";
+export default {
+  data() {
+    return {
+      open: false,
+    };
+  },
+  methods: {
+    handleCancel() {
+      this.open = false;
+    },
+    handleOk() {
+      axios.getLogout().then((res) => {
+        message.success(res.data.message);
+
+        setTimeout(function () {
+          window.location.href = "/login";
+        }, 2000); //2秒后跳转到登录页面
+      });
+
+      this.open = false;
+    },
+    showModel() {
+      this.open = true;
+    },
+  },
+};
 </script>
 
 <style scoped>
