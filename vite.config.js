@@ -24,11 +24,11 @@ export default defineConfig({
     }
   },
   proxy: {
-    '/admin': {
+    '/*': {
       target: 'http://localhost:8081',
       changeOrigin: true,
       pathRewrite: {
-        '^/admin': ''
+        '^/*': ''
       }
     }
   }

@@ -93,123 +93,79 @@
       <vxe-column type="checkbox" width="40"></vxe-column>
       <vxe-column type="seq" width="100"></vxe-column>
       <vxe-column field="typeName" title="分类名"></vxe-column>
-      <vxe-column field="blogNumber" title="博客数量"></vxe-column>
-      <vxe-column field="createTime" title="创建时间"></vxe-column>
-      <vxe-column field="updateTime" title="更新时间"></vxe-column>
+      <vxe-column field="blogNum" title="博客数量"></vxe-column>
+      <vxe-column title="创建时间">
+        {{ createTime }}
+      </vxe-column>
+      <vxe-column title="更新时间">
+        {{ updateTime }}
+      </vxe-column>
     </vxe-table>
   </div>
 </template>
 
 <script>
+import axios from "../../api/type";
 import { message } from "ant-design-vue";
-
 export default {
   data() {
     return {
       typeName: null,
       open: false,
-      open1:false,
-      open2:false,
-      changedName:null,
-      addTypeName:null,
-      typeData: [
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-        {
-          id: 1,
-          typeName: "java",
-          blogNumber: 10,
-          createTime: "2021-1-1",
-          updateTime: "2024-1-1",
-        },
-      ],
+      open1: false,
+      open2: false,
+      changedName: null,
+      addTypeName: null,
+      typeData: [],
+      creatTime: null,
+      updateTime: null,
     };
   },
   methods: {
     submitSearchInfo() {
       console.log(this.typeName);
+      axios.getSearchType(this.typeName).then((res) => {
+        this.typeData = res.data.data;
+      });
     },
     showModel() {
-      this.open = true;
+      const selectedRows = this.$refs.table.getCheckboxRecords();
+      if (selectedRows.length < 1) {
+        message.warn("至少选择一项哦");
+      } else {
+        this.open = true;
+      }
     },
-    showModel1(){
-      this.open1 = true;
+    showModel1() {
+      const selectedRows = this.$refs.table.getCheckboxRecords();
+      if (selectedRows.length > 1) {
+        message.error("一次只能修改一条数据哦");
+      } else if (selectedRows.length < 1) {
+        message.warn("请选择要修改的分类");
+      } else {
+        this.changedName = selectedRows[0].typeName;
+        this.open1 = true;
+      }
     },
-    showModel2(){
+    showModel2() {
       this.open2 = true;
     },
     deleteType() {
       this.open = false;
-      message.success("success");
       const selectedRows = this.$refs.table.getCheckboxRecords();
+      axios
+        .postDeleteType(selectedRows)
+        .then((res) => {
+          if (res.data.code == 200) {
+            message.success(res.data.message);
+            return axios.getTypeInfo();
+          } else {
+            message.error(res.data.message);
+          }
+        })
+        .then((res) => {
+          this.typeData = res.data.data;
+        });
       console.log(selectedRows);
     },
     handleCancel() {
@@ -223,13 +179,41 @@ export default {
     },
     changeTypeName() {
       const selectedRows = this.$refs.table.getCheckboxRecords();
-      console.log(selectedRows,this.changedName);
-      this.open1 = false
+      axios
+        .getChangeTypeName(selectedRows[0].id, this.changedName)
+        .then((res) => {
+          this.typeData = res.data.data;
+          console.log(res);
+        });
+      this.open1 = false;
     },
-    addType(){
-      console.log(this.addTypeName);
+    addType() {
+      axios
+        .getAddType(this.addTypeName)
+        .then((res) => {
+          if (res.data.code == 200) {
+            message.success(res.data.message);
+            return axios.getTypeInfo();
+          } else if (res.data.code == 201) {
+            message.error(res.data.message);
+          }
+        })
+        .then((res) => {
+          this.typeData = res.data.data;
+        });
       this.open2 = false;
-    }
+    },
+  },
+  mounted() {
+    axios.getTypeInfo().then((res) => {
+      this.typeData = res.data.data;
+      this.createTime = this.$moment(this.typeData.createTime).format(
+        "YYYY-MM-DD"
+      );
+      this.updateTime = this.$moment(this.typeData.updateTime).format(
+        "YYYY-MM-DD"
+      );
+    });
   },
 };
 </script>

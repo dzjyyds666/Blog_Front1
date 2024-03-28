@@ -71,8 +71,8 @@ const router = createRouter({
           component: () => import("../views/backend/Type.vue"),
         },
         {
-          path: "edit",
-          name: "编辑博客页面",
+          path: "edit/:id?",
+          name: "编辑博客页面", // 给子路由指定一个名称
           component: () => import("../views/backend/BlogEditor.vue"),
         },
         {
