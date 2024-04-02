@@ -25,14 +25,14 @@
           </div>
         </a-select>
         <a-select
-          v-model:value="blog.typeList"
+          v-model:value="blog.typeNameList"
           class="input-sty"
           placeholder="请选择文章分类"
           mode="multiple"
           v-if="!this.$route.params.id"
         >
-          <div v-for="item in types" :key="item">
-            <a-select-option value="{{item}}">{{ item }}</a-select-option>
+          <div v-for="item in types" :key="item.typeName">
+            <a-select-option :value="item">{{ item.typeName }}</a-select-option>
           </div>
         </a-select>
       </div>
@@ -75,6 +75,7 @@
 <script>
 import { message } from "ant-design-vue";
 import axios from "../../api/blog";
+import axios1 from "../../api/type";
 export default {
   data() {
     return {
@@ -83,12 +84,13 @@ export default {
         title: null,
         firstImg: null,
         tag: null,
+        typeNameList: [],
         typeList: [],
         content: "",
         status: null,
       },
       tags: ["原创", "转载", "翻译"],
-      types: ["java", "python", "vue", "js"],
+      types: [],
       open: false,
     };
   },
@@ -116,7 +118,7 @@ export default {
         axios.postEditBlog(this.blog).then((res) => {
           message.success(res.data.message);
         });
-        setTimeout(()=> {
+        setTimeout(() => {
           this.$router.push({ name: "编辑博客页面" });
           this.blog.title = null;
           this.blog.firstImg = null;
@@ -125,16 +127,40 @@ export default {
           this.blog.content = "";
           this.blog.id = null;
           this.blog.status = null;
+          this.blog.typeNameList = [];
         }, 2000);
+      } else {
+        // console.log(this.blog)
+        axios.postAddBlog(this.blog).then((res) => {
+          if (res.data.code == 201) {
+            message.error(res.data.message);
+          } else {
+            message.success(res.data.message);
+            this.blog.title = null;
+            this.blog.firstImg = null;
+            this.blog.tag = null;
+            this.blog.typeList = [];
+            this.blog.content = "";
+            this.blog.id = null;
+            this.blog.status = null;
+            this.blog.typeNameList = [];
+          }
+        });
       }
       this.open = false;
     },
+  },
+  mounted() {
+    axios1.getTypeInfo().then((res) => {
+      res.data.data.forEach((element) => {
+        this.types.push(element);
+      });
+    });
   },
   created() {
     const id = this.$route.params.id;
     if (id) {
       axios.getBlogById(id).then((res) => {
-        console.log(res.data);
         this.blog = res.data.data;
       });
     }

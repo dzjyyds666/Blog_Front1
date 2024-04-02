@@ -1,11 +1,27 @@
 <template>
   <!-- class="background-img" -->
-  <div class="background-img" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-    <div style="display: flex; height: 50px; position: sticky; top: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999">
+  <div
+    class="background-img"
+    :style="{ 'background-image': 'url(' + blog.firstImg + ')' }"
+  >
+    <div
+      style="
+        display: flex;
+        height: 50px;
+        position: sticky;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      "
+    >
       <!--  导航条固定在顶部 -->
-      <div style="width: 55vw; line-height: 1; display: flex; align-items: center">
+      <div
+        style="width: 55vw; line-height: 1; display: flex; align-items: center"
+      >
         <router-link to="/blog">
-          <h2 style="margin: 6px 0 6px 20px; color: white; font-weight: 900">DuZJ的小站</h2>
+          <h2 style="margin: 6px 0 6px 20px; color: white; font-weight: 900">
+            DuZJ的小站
+          </h2>
         </router-link>
       </div>
 
@@ -84,24 +100,45 @@
     <div>
       <!-- 标题 -->
       <div style="background-color: rgba(0, 0, 0, 0.5)">
-        <div style="height: 400px; display: flex; align-items: center; text-align: center">
+        <div
+          style="
+            height: 400px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+          "
+        >
           <h1 style="color: white; margin: 0 auto">
-            个人博客搭建指南
+            {{ blog.title }}
             <br />
             <a-tag color="purple" size="large">
               <template #icon>
-                <img src="../../assets/img/标签牌.svg" alt="" style="width: 14px" />
+                <img
+                  src="../../assets/img/标签牌.svg"
+                  alt=""
+                  style="width: 14px"
+                />
               </template>
-              原创
+              {{ blog.tag }}
             </a-tag>
             <br />
-            <span style="font-size: small"> 发布于：2024-1-1 </span>
-            <span style="font-size: small; margin-left: 10px"> 最后更新时间：2024-1-2 </span>
+            <span style="font-size: small">
+              发布于：{{ this.$moment(blog.createTime).format("YYYY-MM-DD") }}
+            </span>
+            <span style="font-size: small; margin-left: 10px">
+              最后更新时间：{{
+                this.$moment(blog.updateTime).format("YYYY-MM-DD")
+              }}
+            </span>
             <br />
-            <span v-for="ty in types">
-              <router-link to="#" class="type-a-sty">
-                <img src="../../assets/img/1社区管理.svg" alt="" style="width: 18px" />
-                {{ ty }}
+            <span v-for="type in blog.typeList" :key="type.id">
+              <router-link :to="`/blog/tydetail/${type.typeId}`" class="type-a-sty">
+                <img
+                  src="../../assets/img/1社区管理.svg"
+                  alt=""
+                  style="width: 18px"
+                />
+                {{ type.typeName }}
               </router-link>
             </span>
           </h1>
@@ -114,63 +151,110 @@
             <a-col :span="16" style="padding: 10px">
               <div class="div-border-sty" style="padding: 10px">
                 <!-- //TODO:markdown编辑器 -->
-                <v-md-preview :text="text"></v-md-preview>
+                <v-md-preview :text="blog.content"></v-md-preview>
               </div>
             </a-col>
             <a-col :span="8" style="padding: 10px">
-              <div class="div-border-sty" style="margin-bottom: 20px; padding: 10px">
-                <a-form :model="CommentForm" layout="inline" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-                  <a-form-item name="name" :rules="[{ required: true, message: '请输入你的你的昵称!' }]">
-                    <a-input v-model:value="CommentForm.name" style="width: 26.5vw;margin-bottom: 1vh;" placeholder="必填" >
+              <div
+                class="div-border-sty"
+                style="margin-bottom: 20px; padding: 10px"
+              >
+                <a-form
+                  :model="CommentForm"
+                  layout="inline"
+                  autocomplete="off"
+                  @finish="onFinish"
+                  @finishFailed="onFinishFailed"
+                >
+                  <a-form-item
+                    name="nickname"
+                    :rules="[
+                      { required: true, message: '请输入你的你的昵称!' },
+                    ]"
+                  >
+                    <a-input
+                      v-model:value="CommentForm.nickname"
+                      style="width: 26.5vw; margin-bottom: 1vh"
+                      placeholder="必填"
+                    >
                       <template #addonBefore> 昵称 </template>
                     </a-input>
                   </a-form-item>
 
-                  <a-form-item name="email" :rules="[{ required: true, message: '请输入你的你的邮箱!' }]" >
-                    <a-input v-model:value="CommentForm.email" style="width: 26.5vw" placeholder="必填">
+                  <a-form-item
+                    name="email"
+                    :rules="[
+                      { required: true, message: '请输入你的你的邮箱!' },
+                    ]"
+                  >
+                    <a-input
+                      v-model:value="CommentForm.email"
+                      style="width: 26.5vw"
+                      placeholder="必填"
+                    >
                       <template #addonBefore> 邮箱 </template>
                     </a-input>
                   </a-form-item>
                   <a-form-item name="avatar">
-                    <a-input v-model:value="CommentForm.avatar" style="width: 19.5vw;margin-top: 1vh;" placeholder="选填，默认为蜡笔小新">
+                    <a-input
+                      v-model:value="CommentForm.avatar"
+                      style="width: 19.5vw; margin-top: 1vh"
+                      placeholder="选填，默认为蜡笔小新"
+                    >
                       <template #addonBefore> 自定义头像 </template>
                     </a-input>
                   </a-form-item>
                   <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-                    <a-button type="primary" html-type="submit" style="margin-top: 10px;">发送</a-button>
+                    <a-button
+                      type="primary"
+                      html-type="submit"
+                      style="margin-top: 10px"
+                      >发送</a-button
+                    >
                   </a-form-item>
 
-                  <a-form-item name="comment" :rules="[{ required: true, message: '请输入你的你的邮箱!' }]">
+                  <a-form-item
+                    name="commentsContent"
+                    :rules="[
+                      { required: true, message: '请输入你的你的邮箱!' },
+                    ]"
+                  >
                     <a-textarea
                       placeholder="请输入评论内容"
-                      v-model:value="CommentForm.comment"
+                      v-model:value="CommentForm.commentsContent"
                       show-count
                       :maxlength="300"
                       :auto-size="{ minRows: 3, maxRows: 5 }"
-                      style="margin: 5px 0; width:26.5vw" />
+                      style="margin: 5px 0; width: 26.5vw"
+                    />
                   </a-form-item>
                 </a-form>
               </div>
 
               <div class="div-border-sty" style="padding: 10px">
-                <div style="font-size: larger">10条评论</div>
-                <div style="overflow: scroll; max-height: 1080px; padding: 10px">
+                <div style="font-size: larger">{{ blog.commentNum }}条评论</div>
+                <div
+                  style="overflow: scroll; max-height: 1080px; padding: 10px"
+                >
                   <div v-for="Comment in Comments">
                     <a-comment>
                       <template #author>
-                        {{ Comment.name }}
+                        {{ Comment.nickname }}
                       </template>
                       <template #avatar>
                         <a-avatar :src="Comment.avatar" :alt="Comment.name" />
                       </template>
                       <template #content>
                         <p>
-                          {{ Comment.content }}
+                          {{ Comment.commentsContent }}
                         </p>
                       </template>
                       <template #datetime>
-                        {{ Comment.createTime }}
-                        <span v-if="Comment.isTop == true" style="margin-left: 10px">
+                        {{ this.$moment(Comment.createTime).fromNow() }}
+                        <span
+                          v-if="Comment.isTop == 1"
+                          style="margin-left: 10px"
+                        >
                           <a-tag color="cyan">置顶</a-tag>
                         </span>
                       </template>
@@ -196,7 +280,13 @@
         </a>
       </h5>
       <div>
-        <h5><img src="../../assets/img/浏览量.svg" alt="" style="width: 20px" />1143</h5>
+        <h5>
+          <img
+            src="../../assets/img/浏览量.svg"
+            alt=""
+            style="width: 20px"
+          />1143
+        </h5>
       </div>
       <div style="width: 400px; margin: 0 auto">
         <a-divider style="margin: 10px; height: 2px" />
@@ -212,130 +302,72 @@
 </template>
 
 <script>
+import { message } from "ant-design-vue";
+import axios from "../../api/blog";
+import axios_c from "../../api/comment";
 export default {
   data() {
     return {
-      backgroundImage: "https://pic2.zhimg.com/80/v2-ff0d35d4dcad8e7e1623ef1c294651c1_720w.webp",
-      types: ["java", "vue"],
-      Comments: [
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "精通c++",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content: "我就是精通c++",
-          createTime: "2024-01-28T13:42:32+08:00",
-          isTop: false,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-        {
-          name: "junber",
-          avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-          content:
-            "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-          createTime: "2024-01-27T13:42:32+08:00",
-          isTop: true,
-        },
-      ],
+      Comments: [],
       CommentForm: {
-        name: "",
-        email: "",
-        comment: "",
-        avatar: "",
+        nickname: null,
+        email: null,
+        commentsContent: null,
+        avatar: null,
+        blogId: null,
+      },
+      blog: {
+        id: null,
+        title: null,
+        tag: null,
+        commentNum: null,
+        content: "",
+        typeList: [],
+        firstImg: null,
+        createTime: null,
+        updateTime: null,
       },
       relativeTime: "",
-      text: "# 代码段",
     };
+  },
+  methods: {
+    onFinish() {
+      this.CommentForm.blogId = this.$route.params.id;
+      axios_c.postAddComment(this.CommentForm).then((res) => {
+        if (res.data.code == 200) {
+          message.success(res.data.message);
+          return axios_c.getComment(this.$route.params.id).then((res) => {
+            this.Comments = res.data.data;
+            this.blog.commentNum++;
+          });
+        }else{
+          message.warn(res.data.message);
+        }
+      });
+      this.CommentForm.nickname = null;
+      this.CommentForm.email = null;
+      this.CommentForm.avatar = null;
+      this.CommentForm.commentsContent = null;
+    },
+    onFinishFailed() {},
   },
   mounted() {
     // 修改评论时间 该为相对时间
     this.Comments.forEach((element) => {
       element.createTime = this.$moment(element.createTime).fromNow();
+    });
+    axios.getBlogDetail(this.$route.params.id).then((res) => {
+      this.blog = res.data.data;
+      console.log(res.data)
+    });
+    axios_c.getComment(this.$route.params.id).then((res) => {
+      this.Comments = res.data.data;
+    });
+  },
+  created() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
   },
 };

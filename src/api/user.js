@@ -19,5 +19,9 @@ export default {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
-  }
+  },
+  getUser(){
+    return axios.get(`${path.baseUrl}${path.getUser}`);
+  },
+  
 };

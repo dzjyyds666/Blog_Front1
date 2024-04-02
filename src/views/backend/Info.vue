@@ -45,11 +45,11 @@
         <a-modal v-model:open="open" @ok="changeInfo">
           是否提交对个人信息的修改？
           <template #footer>
-          <a-button key="back" @click="handleCancel">取消</a-button>
-          <a-button key="submit" type="primary" @click="changeInfo"
-            >确认</a-button
-          >
-        </template>
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <a-button key="submit" type="primary" @click="changeInfo"
+              >确认</a-button
+            >
+          </template>
         </a-modal>
       </div>
     </div>
@@ -76,19 +76,20 @@ export default {
   },
   methods: {
     changeInfo() {
-      axios.postEditInfo(this.user).then((res)=>{
-      if(res.status == 201){
-        message.error("jwt无效，请重新登录");
-        setTimeout(function () {
-          window.location.href = "/login";
-        }, 3000);
-      }else {
-        message.success(res.data.message)
-      }
-    })
+      axios.postEditInfo(this.user).then((res) => {
+        if (res.status == 201) {
+          message.error("jwt无效，请重新登录");
+          setTimeout(function () {
+            window.location.href = "/login";
+          }, 3000);
+        } else {
+          message.success(res.data.message);
+        }
+      });
       this.open = false;
+      
     },
-    handleCancel(){
+    handleCancel() {
       this.open = false;
     },
     showModal() {
@@ -110,7 +111,7 @@ export default {
           localStorage.setItem("token", newToken);
         }
       }
-    })
+    });
   },
 };
 </script>

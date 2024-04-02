@@ -31,7 +31,7 @@
       <div class="info-bar-sty">
         <a-dropdown arrow placement="bottom">
           <span style="float: right; margin-right: 3vw">
-            <img src="../assets/img/qq(1).svg" alt="" style="height: 4vh" />
+            <img :src="User.avatar" alt="" style="height: 4vh;border-radius: 30px;" />
           </span>
           <template #overlay>
             <a-menu>
@@ -68,11 +68,15 @@
 
 <script>
 import axios from "@/api/login";
+import axios_u from "@/api/user";
 import { message } from "ant-design-vue";
 export default {
   data() {
     return {
       open: false,
+      User:{
+        avatar:null,
+      }
     };
   },
   methods: {
@@ -82,18 +86,23 @@ export default {
     handleOk() {
       axios.getLogout().then((res) => {
         message.success(res.data.message);
-
+        axios.get
         setTimeout(function () {
           window.location.href = "/login";
         }, 2000); //2秒后跳转到登录页面
       });
-
       this.open = false;
     },
     showModel() {
       this.open = true;
     },
   },
+  mounted(){
+    axios_u.getUserInfo().then((res)=>{
+        this.User = res.data.data;
+        console.log(res.data.data)
+      })
+  }
 };
 </script>
 

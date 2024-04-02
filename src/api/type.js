@@ -46,5 +46,18 @@ export default {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
     })
+  },
+  getSearch(search){
+    return axios.get(`${path.baseUrl}${path.getSearchT}`,{
+      params:{search}
+    })
+  },
+  getFrontType(){
+    return axios.get(`${path.baseUrl}${path.getTypeFront}`);
+  },
+  getTypeById(id){
+    return axios.get(`${path.baseUrl}${path.getTypeById}`,{
+      params:{id}
+    })
   }
 };

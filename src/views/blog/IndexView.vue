@@ -12,17 +12,29 @@
       <div style="width: 80%; margin: 20px auto">
         <a-row>
           <a-col :span="6" style="margin-right: 20px">
-            <div class="div-border-sty photo-center-sty" style="background-color: rgba(255, 255, 255, 0.7)">
+            <div
+              class="div-border-sty photo-center-sty"
+              style="background-color: rgba(255, 255, 255, 0.7)"
+            >
               <!-- 头像 -->
               <div>
-                <img src="../../assets/img/tx.jpg" alt="站长头像" class="avatar-sty" />
+                <img
+                  :src="this.user.avatar"
+                  alt="站长头像"
+                  class="avatar-sty"
+                />
+              </div>
+              <div style="font-size: larger;font-weight: 900;margin:20px">
+                {{ this.user.nickname }}
               </div>
               <div style="width: 90%; margin: auto">
                 <a-divider style="height: 2px; margin: 0" />
               </div>
               <!-- 简介 -->
               <div>
-                <p style="margin: 15px; font-style: italic">不屈、创造、真相、想象、耐心、专注、自由、惊喜</p>
+                <p style="margin: 15px; font-style: italic">
+                  {{this.user.introduction}}
+                </p>
               </div>
               <div style="width: 90%; margin: auto">
                 <a-divider style="height: 2px; margin: 0" />
@@ -32,33 +44,76 @@
                 <h4>交流讨论可以通过以下方式联系：</h4>
                 <a-popover placement="bottom">
                   <template #content>
-                    <img src="../../assets/img/qq(1).svg" alt="qq二维码" style="width: 100px" />
+                    <img
+                      src="../../assets/img/qq(1).svg"
+                      alt="qq二维码"
+                      style="width: 100px"
+                      class="photo-transition-sty"
+                    />
                   </template>
-                  <img src="../../assets/img/qq(1).svg" alt="qq" style="width: 40px; margin: 0 10px" class="photo-transition-sty" />
+                  <img
+                    src="../../assets/img/qq(1).svg"
+                    alt="qq"
+                    style="width: 40px; margin: 0 10px"
+                    class="photo-transition-sty"
+                  />
                 </a-popover>
                 <a-popover placement="bottom">
                   <template #content>
-                    <img src="../../assets/img/wechat.svg" alt="微信二维码" style="width: 100px" />
+                    <img
+                      src="../../assets/img/wechat.svg"
+                      alt="微信二维码"
+                      style="width: 100px"
+                    />
                   </template>
-                  <img src="../../assets/img/wechat.svg" alt="微信" style="width: 40px; margin: 0 10px" class="photo-transition-sty" />
+                  <img
+                    src="../../assets/img/wechat.svg"
+                    alt="微信"
+                    style="width: 40px; margin: 0 10px"
+                    class="photo-transition-sty"
+                  />
                 </a-popover>
               </div>
             </div>
 
             <!-- 公告 -->
-            <div class="div-border-sty" style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.7);">
-              <div style="padding: 10px"><img src="../../assets/img/公告.svg" alt="" style="width: 30px" />公告</div>
+            <div
+              class="div-border-sty"
+              style="
+                margin-top: 20px;
+                background-color: rgba(255, 255, 255, 0.7);
+              "
+            >
+              <div style="padding: 10px">
+                <img
+                  src="../../assets/img/公告.svg"
+                  alt=""
+                  style="width: 30px"
+                />公告
+              </div>
               <div style="width: 90%; margin: auto">
                 <a-divider style="height: 2px; margin: 0" />
               </div>
-              <div style="overflow: scroll;height: 500px;">
-                
+              <div style="overflow: scroll; height: 500px">
+                <v-md-preview :text="notice"></v-md-preview>
               </div>
             </div>
 
             <!-- 最热推荐 -->
-            <div class="div-border-sty" style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.7)">
-              <div style="padding: 10px"><img src="../../assets/img/热度.svg" alt="" style="width: 30px" />最热推荐</div>
+            <!-- <div
+              class="div-border-sty"
+              style="
+                margin-top: 20px;
+                background-color: rgba(255, 255, 255, 0.7);
+              "
+            >
+              <div style="padding: 10px">
+                <img
+                  src="../../assets/img/热度.svg"
+                  alt=""
+                  style="width: 30px"
+                />最热推荐
+              </div>
               <div style="width: 90%; margin: auto">
                 <a-divider style="height: 2px; margin: 0" />
               </div>
@@ -66,56 +121,166 @@
                 <div v-for="item in 10" :key="item" style="height: 80px">
                   <router-link to="#">
                     <div style="display: flex">
-                      <img src="../../assets/img/tx.jpg" alt="" style="width: 50px" />
-                      <span>个人博客搭建指南,西格玛男人永远不会调入女z第三节阿的快速健康了</span>
+                      <img
+                        src="../../assets/img/tx.jpg"
+                        alt=""
+                        style="width: 50px"
+                      />
+                      <span
+                        >个人博客搭建指南,西格玛男人永远不会调入女z第三节阿的快速健康了</span
+                      >
                     </div>
                   </router-link>
                 </div>
               </div>
-            </div>
+            </div> -->
           </a-col>
 
           <a-col :span="17">
-            <div v-for="item in 10" :key="item">
-              <div class="div-border-sty blog-transition-sty" style="margin-bottom: 20px; display: flex; background-color: rgba(255, 255, 255, 0.7)">
-                <img src="../../assets/img/主页-2.svg" alt="" />
-                <div>
-                  <div style="height: 160px; padding: 15px">
-                    <h2 style="height: 34px">
-                      title
-                      <a-tag :bordered="false" color="success" size="large">
-                        <template #icon>
-                          <img src="../../assets/img/标签牌.svg" alt="" style="width: 14px" />
-                        </template>
-                        原创
-                      </a-tag>
-                    </h2>
-                    <p style="text-indent: 2em">
-                      一个时代的发展史，往往是青年勇毅前行、逐梦扬帆的拼搏奋斗史。回望中国共产党走过的百年历程，在无数重大历史节点都有着一大批青年拼搏奋斗的身影。革命战争时期，有一大批青年选择身先士卒，拯救国家于危亡；社会主义建设时期，又有一大批青年选择砥砺奋进，为祖国发展添砖加瓦……当前，我国正处于实现中华民族伟大复兴的关键时期，广大新青年大有可为，以期能够在建功新时代中凝聚奋进力量，唱响青春之歌。
-                    </p>
-                  </div>
-                  <div>
-                    <span>
-                      <img src="../../assets/img/时间.svg" alt="" style="width: 30px" />
-                      <span style="margin-left: 5px; color: #708090">2024-1-16</span>
-                    </span>
+            <div v-for="(item, index) in blog" :key="item.id">
+              <router-link
+                :to="`/blog/detail/${item.id}`"
+                class="route-to-blog-sty"
+              >
+                <div
+                  class="div-border-sty blog-transition-sty"
+                  style="
+                    margin-bottom: 20px;
+                    background-color: rgba(255, 255, 255, 0.7);
+                  "
+                >
+                  <div v-if="index % 2 === 0" style="display: flex">
+                    <img
+                      :src="item.firstImg"
+                      alt=""
+                      style="
+                        max-width: 20vw;
+                        width: auto;
+                        height: auto;
+                        border-radius: 10px;
+                      "
+                    />
+                    <div style="margin-left: 5px">
+                      <div style="height: 160px; padding: 15px">
+                        <h3 style="height: 34px">
+                          {{ item.title }}
+                          <a-tag :bordered="false" color="success" size="large">
+                            <template #icon>
+                              <img
+                                src="../../assets/img/标签牌.svg"
+                                alt=""
+                                style="width: 14px"
+                              />
+                            </template>
+                            {{ item.tag }}
+                          </a-tag>
+                        </h3>
+                        <p style="text-indent: 2em">
+                          {{ item.content }}
+                        </p>
+                      </div>
+                      <div>
+                        <span>
+                          <img
+                            src="../../assets/img/时间.svg"
+                            alt=""
+                            style="width: 30px"
+                          />
+                          <span style="margin-left: 5px; color: #708090">{{
+                            this.$moment(item.createTime).format("YYYY-MM-DD")
+                          }}</span>
+                        </span>
 
-                    <span style="float: right; padding: 5px 15px">
-                      <span v-for="item in 2">
-                        <a-tag :bordered="false" color="magenta">
-                          <template #icon>
-                            <img src="../../assets/img/文件夹.svg" alt="" style="width: 14px" />
-                          </template>
-                          magenta
-                        </a-tag>
-                      </span>
-                    </span>
+                        <span style="float: right; padding: 5px 15px">
+                          <span v-for="it in item.typeList">
+                            <a-tag :bordered="false" color="magenta">
+                              <template #icon>
+                                <img
+                                  src="../../assets/img/文件夹.svg"
+                                  alt=""
+                                  style="width: 14px"
+                                />
+                              </template>
+                              {{ it.typeName }}
+                            </a-tag>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="index % 2 === 1" style="display: flex">
+                    <div style="margin-left: 5px">
+                      <div style="height: 160px; padding: 15px">
+                        <h3 style="height: 34px">
+                          {{ item.title }}
+                          <a-tag :bordered="false" color="success" size="large">
+                            <template #icon>
+                              <img
+                                src="../../assets/img/标签牌.svg"
+                                alt=""
+                                style="width: 14px"
+                              />
+                            </template>
+                            {{ item.tag }}
+                          </a-tag>
+                        </h3>
+                        <p style="text-indent: 2em">
+                          {{ item.content }}
+                        </p>
+                      </div>
+                      <div>
+                        <span>
+                          <img
+                            src="../../assets/img/时间.svg"
+                            alt=""
+                            style="width: 30px"
+                          />
+                          <span style="margin-left: 5px; color: #708090">{{
+                            this.$moment(item.createTime).format("YYYY-MM-DD")
+                          }}</span>
+                        </span>
+
+                        <span style="float: right; padding: 5px 15px">
+                          <span v-for="it in item.typeList">
+                            <a-tag :bordered="false" color="magenta">
+                              <template #icon>
+                                <img
+                                  src="../../assets/img/文件夹.svg"
+                                  alt=""
+                                  style="width: 14px"
+                                />
+                              </template>
+                              {{ it.typeName }}
+                            </a-tag>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <img
+                      :src="item.firstImg"
+                      alt=""
+                      style="
+                        max-width: 20vw;
+                        width: auto;
+                        height: auto;
+                        border-radius: 10px;
+                      "
+                    />
                   </div>
                 </div>
-              </div>
+              </router-link>
             </div>
-            <div class="center-sty">
-              <el-pagination layout="prev, pager, next" :total="1000" v-model:current-page="current" background @current-change="handleCurrentChange" />
+            <div class="center-sty" >
+              <el-pagination
+                layout="prev, pager, next,sizes"
+                :total="blogNum"
+                :page-sizes="[5, 10, 15, 20]"
+                v-model:page-size="pageSize"
+                v-model:current-page="current"
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
             </div>
           </a-col>
         </a-row>
@@ -127,13 +292,20 @@
 <script>
 import { ElPagination } from "element-plus";
 import "element-plus/es/components/pagination/style/css";
+import axios from "../../api/blog";
+import axios1 from "../../api/setting";
+import axios2 from "../../api/user";
 
 export default {
   data() {
     return {
-      counter: 0,
       current: 1,
-      pageSize: 10,
+      pageSize: 5,
+      blogNum: null,
+      blog: [],
+      user:[],
+      notice: "",
+      name: "公告",
     };
   },
   components: {
@@ -142,7 +314,36 @@ export default {
   methods: {
     handleCurrentChange() {
       console.log(this.current);
+      console.log(this.pageSize);
+      axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
+        (this.blog = res.data.data), console.log(res.data);
+      });
     },
+    handleSizeChange() {
+      console.log(this.pageSize);
+      console.log(this.current);
+      axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
+        (this.blog = res.data.data), console.log(res.data);
+      });
+    },
+  },
+  mounted() {
+    axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
+      this.blog = res.data.data;
+      console.log(this.blog);
+    });
+    axios.getBlogNumber().then((res) => {
+      this.blogNum = res.data.data;
+      console.log(this.blogNum);
+    });
+    axios1.getContent("公告").then((res) => {
+      this.notice = res.data.data;
+      console.log(res.data);
+    });
+    axios2.getUser().then((res)=>{
+      this.user = res.data.data;
+      console.log(res.data)
+    })
   },
 };
 </script>
@@ -196,9 +397,13 @@ a:hover {
   transform: scale(1.01);
 }
 p {
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 4;
-	overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.route-to-blog-sty {
+  padding: 0;
 }
 </style>

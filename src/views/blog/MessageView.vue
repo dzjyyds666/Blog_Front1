@@ -1,41 +1,77 @@
 <template>
   <div>
     <div style="margin: 250px 0">
-      <h1 style="color: white; text-align: center; font-weight: 900; height: 96px">
+      <h1
+        style="color: white; text-align: center; font-weight: 900; height: 96px"
+      >
         留言板
         <br />
-        <span style="font-size: small"> 
-          更新时间：2024-1-27
-          <a-divider type="vertical"/>
-          100条留言
+        <span style="font-size: small">
+          更新时间：{{ newTime[0] }}-{{ newTime[1] }}-{{ newTime[2] }}
+          <a-divider type="vertical" />
+          共{{ Comment.length }}条留言
         </span>
       </h1>
     </div>
 
     <!-- 主体 -->
     <div style="background-color: rgba(255, 255, 255, 0.7); padding: 20px">
-      <div style="background-color: rgba(255, 255, 255, 0.8); margin: 20px auto; width: 80%; padding: 10px" class="div-border-sty">
-        marksown编辑器
+      <div
+        style="
+          background-color: rgba(255, 255, 255, 0.8);
+          margin: 20px auto;
+          width: 80%;
+          padding: 10px;
+        "
+        class="div-border-sty"
+      >
+        <v-md-preview :text="Messgae"></v-md-preview>
         <div style="width: 90%; margin: auto">
-          <a-divider style="height: 2px; margin: 20px" />
+          <a-divider style="height: 2px" />
         </div>
         <!-- 留言板  -->
         <div style="width: 70%; margin: auto">
           <!-- 评论表单 -->
-          <a-form :model="CommentForm" layout="inline" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-            <a-form-item name="name" :rules="[{ required: true, message: '请输入你的你的昵称!' }]">
-              <a-input v-model:value="CommentForm.name" style="width: 25vw;margin-bottom: 1vh;" placeholder="必填">
+          <a-form
+            :model="CommentForm"
+            layout="inline"
+            autocomplete="off"
+            @finish="onFinish"
+            @finishFailed="onFinishFailed"
+          >
+            <!-- :rules="[{ required: true, message: '请输入你的你的昵称!' }]" -->
+            <a-form-item
+              name="nickname"
+              :rules="[{ required: true, message: '请输入你的你的昵称!' }]"
+            >
+              <a-input
+                v-model:value="CommentForm.nickname"
+                style="width: 25vw; margin-bottom: 1vh"
+                placeholder="必填"
+              >
                 <template #addonBefore> 昵称 </template>
               </a-input>
             </a-form-item>
 
-            <a-form-item name="email" :rules="[{ required: true, message: '请输入你的你的邮箱!' }]" >
-              <a-input v-model:value="CommentForm.email" style="width: 26vw;margin-bottom: 1vh;" placeholder="必填">
+            <!-- :rules="[{ required: true, message: '请输入你的你的邮箱!' }]" -->
+            <a-form-item
+              name="email"
+              :rules="[{ required: true, message: '请输入你的你的邮箱!' }]"
+            >
+              <a-input
+                v-model:value="CommentForm.email"
+                style="width: 26vw; margin-bottom: 1vh"
+                placeholder="必填"
+              >
                 <template #addonBefore> 邮箱 </template>
               </a-input>
             </a-form-item>
             <a-form-item name="avatar">
-              <a-input v-model:value="CommentForm.avatar" style="width: 45vw" placeholder="选填，默认为蜡笔小新">
+              <a-input
+                v-model:value="CommentForm.avatar"
+                style="width: 45vw"
+                placeholder="选填，默认为蜡笔小新"
+              >
                 <template #addonBefore> 自定义头像 </template>
               </a-input>
             </a-form-item>
@@ -43,27 +79,38 @@
               <a-button type="primary" html-type="submit">发送</a-button>
             </a-form-item>
 
-            <a-form-item name="comment" :rules="[{ required: true, message: '请输入你的你的邮箱!' }]">
-              <a-textarea placeholder="请输入留言内容" v-model:value="CommentForm.comment" show-count :maxlength="300" :auto-size="{ minRows: 3, maxRows: 5 }" style="margin: 5px 0; width: 52vw" />
+            <!-- :rules="[{ required: true, message: '请输入你的你的邮箱!' }]" -->
+            <a-form-item
+              name="commentsContent"
+              :rules="[{ required: true, message: '请输入你的你的邮箱!' }]"
+            >
+              <a-textarea
+                placeholder="请输入留言内容"
+                v-model:value="CommentForm.commentsContent"
+                show-count
+                :maxlength="300"
+                :auto-size="{ minRows: 3, maxRows: 5 }"
+                style="margin: 5px 0; width: 52vw"
+              />
             </a-form-item>
           </a-form>
           <a-divider></a-divider>
 
-          <a-comment>
+          <a-comment v-for="item in Comment" :key="item.id">
             <template #author>
-              {{ Comment.name }}
+              {{ item.nickname }}
             </template>
             <template #avatar>
-              <a-avatar :src="Comment.avatar" :alt="Comment.name" />
+              <a-avatar :src="item.avatar" :alt="Comment.name" />
             </template>
             <template #content>
               <p>
-                {{ Comment.content }}
+                {{ item.commentsContent }}
               </p>
             </template>
             <template #datetime>
-              {{ relativeTime }}
-              <span v-if="Comment.isTop == true" style="margin-left: 10px;">
+              {{ this.$moment(item.createTime).fromNow() }}
+              <span v-if="item.isTop == true" style="margin-left: 10px">
                 <a-tag color="cyan">置顶</a-tag>
               </span>
             </template>
@@ -75,37 +122,57 @@
 </template>
 
 <script>
+import { message } from "ant-design-vue";
+import axios1 from "../../api/message";
+import axios from "../../api/setting";
 export default {
   data() {
     return {
       CommentForm: {
-        name: "",
-        email: "",
-        comment: "",
-        avatar: "",
+        nickname: null,
+        email: null,
+        commentsContent: null,
+        avatar: null,
       },
-      Comment: {
-        name: "junber",
-        avatar: "https://q0.itc.cn/q_70/images03/20240126/900a2d3d3ffa4e5d8726d254f47664ab.jpeg",
-        content:
-          "那个曾住在心里，视若珍宝的人，弄丢了就再也回不来了。分开的那一刻 可能你还不会觉得有多悲伤，真正让你难过的，是有一天你又去到那家餐厅，吃到那道菜，但对面的位置却已经空了的时候。你会突然惊醒，再问自己一句，当初那么爱的人，怎么舍得让他走呢？情绪低落时能有人安慰鼓励 难过时能有人逗自己开心真的好好呀，当我给你发了一大堆肺腑之言，你却只回我一个表情包的时候， 我就知道我的热情给错了人。",
-        createTime: "2024-01-27T13:42:32+08:00",
-        
-        isTop: true,
-      },
-      relativeTime: "",
+      Comment: [],
+      Messgae: "",
+      newTime: [],
+      counter: 0,
     };
   },
   components: {},
   methods: {
     onFinish() {
-      console.log(this.CommentForm);
+      axios1.postAddMessage(this.CommentForm).then((res) => {
+        console.log(res.data);
+        if (res.data.code == 201) {
+          message.error(res.data.message);
+        } else {
+          message.success(res.data.message);
+          this.CommentForm.nickname = null;
+          this.CommentForm.email = null;
+          this.CommentForm.commentsContent = null;
+          this.CommentForm.avatar = null;
+
+          axios1.getMessage().then((res) => {
+            this.Comment = res.data.data;
+          });
+        }
+      });
     },
     onFinishFailed() {},
   },
   mounted() {
     // this.relativeTime = this.$moment(this.Comment.createTime).format('YYYY-MM-DD HH:mm') 绝对时间
-    this.relativeTime = this.$moment(this.Comment.createTime).fromNow();
+    axios.getContent("留言板").then((res) => {
+      this.Messgae = res.data.data;
+    });
+    axios1.getMessage().then((res) => {
+      this.Comment = res.data.data;
+    });
+    axios1.getNewTime().then((res) => {
+      this.newTime = res.data.data;
+    });
   },
 };
 </script>

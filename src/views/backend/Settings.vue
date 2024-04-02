@@ -51,6 +51,7 @@
 
 <script>
 import { message } from 'ant-design-vue';
+import axios from '../../api/setting';
 
 export default {
   data() {
@@ -59,6 +60,10 @@ export default {
       messageBoards: "",
       whichComponent: 0,
       open: false,
+      setting:{
+        name:null,
+        content:null,
+      }
     };
   },
   methods: {
@@ -73,11 +78,17 @@ export default {
     },
     submit(componentId){
       if(componentId == 1){
-        console.log("保存公告");
+        this.setting.name = "公告",
+        this.setting.content = this.notice;
+        axios.postEdit(this.setting).then((res)=>{
+        })
         this.open = false;
       }
       else if(componentId == 2){
-        console.log("保存留言板");
+        this.setting.name = "留言板",
+        this.setting.content = this.messageBoards;
+        axios.postEdit(this.setting).then((res)=>{
+        })
         this.open = false;
       }
       message.success("保存成功");

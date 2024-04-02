@@ -123,7 +123,6 @@ export default {
   },
   methods: {
     submitSearchInfo() {
-      console.log(this.typeName);
       axios.getSearchType(this.typeName).then((res) => {
         this.typeData = res.data.data;
       });
@@ -166,7 +165,6 @@ export default {
         .then((res) => {
           this.typeData = res.data.data;
         });
-      console.log(selectedRows);
     },
     handleCancel() {
       this.open = false;
@@ -183,7 +181,6 @@ export default {
         .getChangeTypeName(selectedRows[0].id, this.changedName)
         .then((res) => {
           this.typeData = res.data.data;
-          console.log(res);
         });
       this.open1 = false;
     },
@@ -201,6 +198,7 @@ export default {
         .then((res) => {
           this.typeData = res.data.data;
         });
+        this.addTypeName = null;
       this.open2 = false;
     },
   },

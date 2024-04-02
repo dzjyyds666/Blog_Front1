@@ -2,79 +2,148 @@
   <div>
     <div style="margin: 150px 0">
       <h1 style="color: white; text-align: center">
-        java
+        {{ type.typeName }}
         <br />
-        <span style="font-size: small"> 创建时间：2024-1-1 </span>
-        <span style="font-size: small; margin-left: 20px">10篇文章</span>
+        <span style="font-size: small">
+          创建时间：{{ this.$moment(type.createTime).format("YYYY-MM-DD") }}
+        </span>
+        <span style="font-size: small; margin-left: 20px"
+          >{{ type.blogNum }}篇文章</span
+        >
       </h1>
     </div>
 
     <div style="background-color: rgba(255, 255, 255, 0.7); padding: 20px">
-      <div style="width: 80%;margin:10px auto">
-        <div v-for="item in 10" :key="item">
-          <div class="div-border-sty blog-transition-sty" style="margin-bottom: 20px; display: flex; background-color: rgba(255, 255, 255, 0.7)">
-            <img src="../../assets/img/主页-2.svg" alt="" />
-            <div>
-              <div style="height: 160px; padding: 15px">
-                <h2 style="height: 34px">
-                  title
-                  <a-tag :bordered="false" color="success" size="large">
-                    <template #icon>
-                      <img src="../../assets/img/标签牌.svg" alt="" style="width: 14px" />
-                    </template>
-                    原创
-                  </a-tag>
-                </h2>
-                <p style="text-indent: 2em">
-                  一个时代的发展史，往往是青年勇毅前行、逐梦扬帆的拼搏奋斗史。回望中国共产党走过的百年历程，在无数重大历史节点都有着一大批青年拼搏奋斗的身影。革命战争时期，有一大批青年选择身先士卒，拯救国家于危亡；社会主义建设时期，又有一大批青年选择砥砺奋进，为祖国发展添砖加瓦……当前，我国正处于实现中华民族伟大复兴的关键时期，广大新青年大有可为，以期能够在建功新时代中凝聚奋进力量，唱响青春之歌。
-                </p>
-              </div>
-              <div>
-                <span>
-                  <img src="../../assets/img/时间.svg" alt="" style="width: 30px" />
-                  <span style="margin-left: 5px; color: #708090">2024-1-16</span>
-                </span>
-
-                <span style="float: right; padding: 5px 15px">
-                  <span v-for="item in 2">
-                    <a-tag :bordered="false" color="magenta">
+      <div style="width: 80%; margin: 10px auto">
+        <router-link
+          :to="`/blog/detail/${item.id}`"
+          v-for="item in blog"
+          :key="item.id"
+          style="padding: 0px"
+        >
+          <div>
+            <div
+              class="div-border-sty blog-transition-sty"
+              style="
+                margin-bottom: 20px;
+                display: flex;
+                background-color: rgba(255, 255, 255, 0.7);
+              "
+            >
+              <img
+                :src="item.firstImg"
+                alt=""
+                style="
+                  max-width: 20vw;
+                  width: auto;
+                  height: auto;
+                  border-radius: 10px;
+                "
+              />
+              <div style="padding: 10px">
+                <div style="height: 160px; padding: 15px">
+                  <h2 style="height: 34px">
+                    {{ item.title }}
+                    <a-tag :bordered="false" color="success" size="large">
                       <template #icon>
-                        <img src="../../assets/img/文件夹.svg" alt="" style="width: 14px" />
+                        <img
+                          src="../../assets/img/标签牌.svg"
+                          alt=""
+                          style="width: 14px"
+                        />
                       </template>
-                      magenta
+                      {{ item.tag }}
                     </a-tag>
+                  </h2>
+                  <p style="text-indent: 2em">
+                    {{ item.content }}
+                  </p>
+                </div>
+                <div>
+                  <span>
+                    <img
+                      src="../../assets/img/时间.svg"
+                      alt=""
+                      style="width: 30px"
+                    />
+                    <span style="margin-left: 5px; color: #708090"
+                      >2024-1-16</span
+                    >
                   </span>
-                </span>
+
+                  <span style="float: right; padding: 5px 15px">
+                    <span v-for="it in item.typeList">
+                      <a-tag :bordered="false" color="magenta">
+                        <template #icon>
+                          <img
+                            src="../../assets/img/文件夹.svg"
+                            alt=""
+                            style="width: 14px"
+                          />
+                        </template>
+                        {{ it.typeName }}
+                      </a-tag>
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
+
         <div class="center-sty">
-            <el-pagination layout="prev, pager, next" :total="1000"  v-model:current-page="current" background @current-change="handleCurrentChange" />
-          </div>
+          <el-pagination
+            layout="prev, pager, next"
+            :total="type.blogNum"
+            :page-size="5"
+            v-model:current-page="current"
+            background
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ElPagination } from 'element-plus'
-import 'element-plus/es/components/pagination/style/css'
-export default{
+import { ElPagination } from "element-plus";
+import "element-plus/es/components/pagination/style/css";
+import axios from "../../api/type";
+import axios_b from "../../api/blog";
+export default {
   data() {
     return {
-      current:1,
-    }
+      current: 1,
+      type: {
+        id: null,
+        typeName: null,
+        blogNum: null,
+        createTime: null,
+        updateTime: null,
+      },
+      blog: [],
+    };
   },
-  components:{
-    ElPagination
+  components: {
+    ElPagination,
   },
   methods: {
-    handleCurrentChange(){
-      console.log(this.current);
-    }
+    handleCurrentChange() {
+      axios_b.getByTypeId(this.$route.params.id,this.current,5).then((res) => {
+      this.blog = res.data.data;
+    });
+    },
   },
-}
+  mounted() {
+    axios.getTypeById(this.$route.params.id).then((res) => {
+      this.type = res.data.data;
+    });
+    axios_b.getByTypeId(this.$route.params.id,1,5).then((res) => {
+      this.blog = res.data.data;
+    });
+  },
+};
 </script>
 
 <style scoped>
@@ -89,9 +158,23 @@ export default{
 .blog-transition-sty:hover {
   transform: scale(1.01);
 }
-.center-sty{
+.center-sty {
   display: flex;
   text-align: center;
   justify-content: center;
+}
+
+p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+a {
+  color: black;
+}
+a:hover {
+  color: blueviolet;
 }
 </style>

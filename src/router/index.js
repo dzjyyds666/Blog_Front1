@@ -39,10 +39,10 @@ const router = createRouter({
           component: () => import("../views/blog/TypeView.vue"),
         },
         {
-          path: "tydetail/:type?",
-          name: "分类详情页",
-          component: () => import("../views/blog/TypeDetail.vue"),
-        },
+          path:"tydetail/:id",
+          name:"type详情页",
+          component:()=>import("../views/blog/TypeDetail.vue"),
+        }
       ],
     },
     {
@@ -53,6 +53,7 @@ const router = createRouter({
       children: [
         {
           path: "",
+          name:"重定向",
           redirect: "amsystem/info",
         },
         {
@@ -83,7 +84,7 @@ const router = createRouter({
       ],
     },
     {
-      path: "/blog/detail/:id?",
+      path: "/blog/detail/:id",
       name: "博客详情页",
       component: () => import("../views/blog/BlogDetail.vue"),
       meta: { isAuth: false },

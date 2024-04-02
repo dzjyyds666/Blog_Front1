@@ -96,10 +96,14 @@
         </template>
       </vxe-column>
       <vxe-column title="编辑时间">
-        {{ createTime }}
+        <template #default="{row}">
+          {{ this.$moment(row.createTime).format("YYYY-MM-DD") }}
+        </template>
       </vxe-column>
       <vxe-column title="更新时间">
-        {{ updateTime }}
+        <template #default="{row}">
+          {{ this.$moment(row.updateTime).format("YYYY-MM-DD") }}
+        </template>
       </vxe-column>
     </vxe-table>
   </div>
@@ -119,15 +123,12 @@ export default {
         typeList: [],
         status: null,
       },
-      createTime: null,
-      updateTime: null,
       vxeTableKey: 1,
       tags: ["原创", "转载", "翻译"],
     };
   },
   methods: {
     submitSearchInfo() {
-      console.log(this.searchInfo);
       axios.postSearchBlog(this.searchInfo).then((res) => {
         this.blogData = res.data.data;
       });
@@ -168,12 +169,8 @@ export default {
   mounted() {
     axios.getBlogInfo().then((res) => {
       this.blogData = res.data.data;
-      this.createTime = this.$moment(this.blogData.createTime).format(
-        "YYYY-MM-DD"
-      );
-      this.updateTime = this.$moment(this.blogData.updateTime).format(
-        "YYYY-MM-DD"
-      );
+      console.log(res)
+      
     });
   },
 };
