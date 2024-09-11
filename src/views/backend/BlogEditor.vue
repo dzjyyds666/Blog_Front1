@@ -45,7 +45,19 @@
     </div>
 
     <div style="width: 100%; height: 30vh; margin: 20px auto">
-      <v-md-editor v-model="blog.content" height="30vh"></v-md-editor>
+      <!-- <v-md-editor
+        v-model="blog.content"
+        left-toolbar="undo redo | emoji image"
+        @upload-image="handleUploadImage"
+        :disabled-menus="[]"
+        height="30vh"
+      ></v-md-editor> -->
+
+      <MdEditor
+        v-model="blog.content"
+        :toolbars="toolbars"
+        style="height: 30vh; width: 76vw"
+      />
     </div>
     <div style="text-align: center">
       <a-button
@@ -76,6 +88,9 @@
 import { message } from "ant-design-vue";
 import axios from "../../api/blog";
 import axios1 from "../../api/type";
+
+import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 export default {
   data() {
     return {
@@ -92,6 +107,40 @@ export default {
       tags: ["原创", "转载", "翻译"],
       types: [],
       open: false,
+
+      toolbars: [
+      "revoke",
+        "next",
+        "save",
+        '-',
+        "bold",
+        "underline",
+        "italic",
+        "-",
+        "strikeThrough",
+        "title",
+        "sub",
+        "sup",
+        "quote",
+        "unorderedList",
+        "orderedList",
+        "task", // ^2.4.0
+        "-",
+        "codeRow",
+        "code",
+        "link",
+        "image",
+        "table",
+        "mermaid",
+        "katex",
+        "=",
+        "pageFullscreen",
+        "fullscreen",
+        "preview",
+        "htmlPreview",
+        "catalog",
+        "github",
+      ],
     };
   },
   methods: {
@@ -152,9 +201,8 @@ export default {
   },
   mounted() {
     axios1.getTypeInfo().then((res) => {
-      res.data.data.forEach((element) => {
-        this.types.push(element);
-      });
+      console.log(res.data);
+      this.types = res.data.data;
     });
   },
   created() {
@@ -164,6 +212,9 @@ export default {
         this.blog = res.data.data;
       });
     }
+  },
+  components: {
+    MdEditor,
   },
 };
 </script>

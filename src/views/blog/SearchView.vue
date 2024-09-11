@@ -160,7 +160,6 @@ export default {
         axios1
           .getSearch(this.value)
           .then((res) => {
-            console.log(res.data);
             if (res.data.code === 201) {
               message.error(res.data.message);
             } else {

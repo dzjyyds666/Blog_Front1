@@ -3,11 +3,12 @@
   <div
     class="background-img"
     :style="{ 'background-image': 'url(' + blog.firstImg + ')' }"
+    style="position: relative"
   >
     <div
       style="
         display: flex;
-        height: 50px;
+        height: 40px;
         position: sticky;
         top: 0;
         background-color: rgba(0, 0, 0, 0.5);
@@ -132,7 +133,10 @@
             </span>
             <br />
             <span v-for="type in blog.typeList" :key="type.id">
-              <router-link :to="`/blog/tydetail/${type.typeId}`" class="type-a-sty">
+              <router-link
+                :to="`/blog/tydetail/${type.typeId}`"
+                class="type-a-sty"
+              >
                 <img
                   src="../../assets/img/1社区管理.svg"
                   alt=""
@@ -151,7 +155,9 @@
             <a-col :span="16" style="padding: 10px">
               <div class="div-border-sty" style="padding: 10px">
                 <!-- //TODO:markdown编辑器 -->
-                <v-md-preview :text="blog.content"></v-md-preview>
+                <!-- <v-md-preview :text="blog.content"></v-md-preview> -->
+                <!-- <v-md-preview-html :html="htmlcontent" preview-class="vuepress-markdown-body"></v-md-preview-html> -->
+                <MdPreview :editorId="id" :modelValue="blog.content" />
               </div>
             </a-col>
             <a-col :span="8" style="padding: 10px">
@@ -174,7 +180,7 @@
                   >
                     <a-input
                       v-model:value="CommentForm.nickname"
-                      style="width: 26.5vw; margin-bottom: 1vh"
+                      style="width: 26vw; margin-bottom: 1vh"
                       placeholder="必填"
                     >
                       <template #addonBefore> 昵称 </template>
@@ -189,7 +195,7 @@
                   >
                     <a-input
                       v-model:value="CommentForm.email"
-                      style="width: 26.5vw"
+                      style="width: 26vw"
                       placeholder="必填"
                     >
                       <template #addonBefore> 邮箱 </template>
@@ -198,7 +204,7 @@
                   <a-form-item name="avatar">
                     <a-input
                       v-model:value="CommentForm.avatar"
-                      style="width: 19.5vw; margin-top: 1vh"
+                      style="width: 19vw; margin-top: 1vh"
                       placeholder="选填，默认为蜡笔小新"
                     >
                       <template #addonBefore> 自定义头像 </template>
@@ -225,7 +231,7 @@
                       show-count
                       :maxlength="300"
                       :auto-size="{ minRows: 3, maxRows: 5 }"
-                      style="margin: 5px 0; width: 26.5vw"
+                      style="margin: 5px 0; width: 26vw"
                     />
                   </a-form-item>
                 </a-form>
@@ -234,7 +240,7 @@
               <div class="div-border-sty" style="padding: 10px">
                 <div style="font-size: larger">{{ blog.commentNum }}条评论</div>
                 <div
-                  style="overflow: scroll; max-height: 1080px; padding: 10px"
+                  style="overflow-y: scroll; max-height: 1080px; padding: 10px"
                 >
                   <div v-for="Comment in Comments">
                     <a-comment>
@@ -298,6 +304,24 @@
       </h5>
       <h5>Power By Vue3 And SpringBoot</h5>
     </div>
+    <!-- 悬浮按钮 -->
+    <!-- <a-popover placement="left">
+      <template #content>
+        <MdCatalog :editorId="id" :scrollElement="scrollElement" />
+      </template>
+      <a-float-button />
+    </a-popover> -->
+
+    <a-float-button-group shape="square" style="bottom: 20vh;">
+      <a-popover placement="left" >
+        <template #content>
+          <MdCatalog :editorId="id" :scrollElement="scrollElement" style="max-height:30vh;overflow-y: scroll;"/>
+        </template>
+        <a-float-button />
+      </a-popover>
+
+      <a-back-top :visibility-height="0" />
+    </a-float-button-group>
   </div>
 </template>
 
@@ -305,6 +329,8 @@
 import { message } from "ant-design-vue";
 import axios from "../../api/blog";
 import axios_c from "../../api/comment";
+import { MdPreview, MdCatalog } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 export default {
   data() {
     return {
@@ -327,8 +353,15 @@ export default {
         createTime: null,
         updateTime: null,
       },
-      relativeTime: "",
+      htmlcontent: "",
+      titles: [],
+      id: "preview-only",
+      scrollElement: document.documentElement,
     };
+  },
+  components: {
+    MdPreview,
+    MdCatalog,
   },
   methods: {
     onFinish() {
@@ -340,7 +373,7 @@ export default {
             this.Comments = res.data.data;
             this.blog.commentNum++;
           });
-        }else{
+        } else {
           message.warn(res.data.message);
         }
       });
@@ -358,7 +391,9 @@ export default {
     });
     axios.getBlogDetail(this.$route.params.id).then((res) => {
       this.blog = res.data.data;
-      console.log(res.data)
+      // this.htmlcontent = xss.process(VueMarkdownEditor.vMdParser.themeConfig.markdownParser.render(this.blog.content));
+      // console.log(this.htmlcontent)
+      console.log(res.data);
     });
     axios_c.getComment(this.$route.params.id).then((res) => {
       this.Comments = res.data.data;

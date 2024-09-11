@@ -12,7 +12,8 @@
         v-if="whichComponent == 1"
       >
         <div style="margin-bottom: 20px;font-size: x-large;">编辑公告</div>
-        <v-md-editor v-model="notice" height="400px"></v-md-editor>
+        <!-- <v-md-editor v-model="notice" height="400px"></v-md-editor> -->
+        <MdEditor v-model="notice" style="height: 400px"></MdEditor>
         <a-button type="text" class="button-sty" @click="showModel"
           >提交</a-button
         >
@@ -31,7 +32,8 @@
         v-if="whichComponent == 2"
       >
         <div style="margin-bottom: 20px;font-size: x-large">编辑留言板</div>
-        <v-md-editor v-model="messageBoards" height="400px"></v-md-editor>
+        <!-- <v-md-editor v-model="messageBoards" height="400px"></v-md-editor> -->
+        <MdEditor v-model="messageBoards" style="height: 400px;"></MdEditor>
         <a-button type="text" class="button-sty" @click="showModel"
           >提交</a-button
         >
@@ -52,7 +54,8 @@
 <script>
 import { message } from 'ant-design-vue';
 import axios from '../../api/setting';
-
+import { MdEditor } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 export default {
   data() {
     return {
@@ -65,6 +68,9 @@ export default {
         content:null,
       }
     };
+  },
+  components:{
+    MdEditor
   },
   methods: {
     changeComponent(componentId) {

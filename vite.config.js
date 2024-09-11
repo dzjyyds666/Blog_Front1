@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 9111,
+    port: 8085,
     host: true,
   },
   transpileDependencies: true,
@@ -23,14 +23,4 @@ export default defineConfig({
       }
     }
   },
-  proxy: {
-    '/*': {
-      target: 'http://localhost:8081',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/*': ''
-      }
-    }
-  }
-
 });

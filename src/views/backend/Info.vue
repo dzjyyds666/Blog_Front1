@@ -36,7 +36,8 @@
       <a-button @click="visible = !visible" style="margin: 10px">{{
         visible ? "Hide" : "Show"
       }}</a-button>
-      <v-md-editor v-model="user.introduction"></v-md-editor>
+      <!-- <v-md-editor v-model="user.introduction"></v-md-editor> -->
+      <MdEditor v-model="user.introduction" :toolbars="toolbars" style="height: 22vh;"/>
 
       <div>
         <a-button class="button-sty" @click="showModal" type="text"
@@ -59,6 +60,9 @@
 <script>
 import axios from "@/api/user";
 import { message } from "ant-design-vue";
+
+import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 export default {
   data() {
     return {
@@ -72,6 +76,38 @@ export default {
         introduction: " ",
         avatar: null,
       },
+      toolbars: [
+      "revoke",
+        "next",
+        "save",
+        '-',
+        "bold",
+        "underline",
+        "italic",
+        "-",
+        "strikeThrough",
+        "title",
+        "sub",
+        "sup",
+        "quote",
+        "unorderedList",
+        "orderedList",
+        "task", // ^2.4.0
+        "-",
+        "codeRow",
+        "code",
+        "link",
+        "image",
+        "table",
+        "mermaid",
+        "katex",
+        "=",
+        "pageFullscreen",
+        "fullscreen",
+        "preview",
+        "htmlPreview",
+        "catalog",
+      ],
     };
   },
   methods: {
@@ -113,6 +149,9 @@ export default {
       }
     });
   },
+  components:{
+    MdEditor,
+  }
 };
 </script>
 

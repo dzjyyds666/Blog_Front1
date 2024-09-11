@@ -178,9 +178,10 @@ export default {
     changeTypeName() {
       const selectedRows = this.$refs.table.getCheckboxRecords();
       axios
-        .getChangeTypeName(selectedRows[0].id, this.changedName)
+        .getChangeTypeName(selectedRows[0].typeId, this.changedName)
         .then((res) => {
           this.typeData = res.data.data;
+          message.success("修改成功！")
         });
       this.open1 = false;
     },

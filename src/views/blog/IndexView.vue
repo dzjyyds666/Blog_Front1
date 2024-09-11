@@ -24,7 +24,7 @@
                   class="avatar-sty"
                 />
               </div>
-              <div style="font-size: larger;font-weight: 900;margin:20px">
+              <div style="font-size: larger; font-weight: 900; margin: 20px">
                 {{ this.user.nickname }}
               </div>
               <div style="width: 90%; margin: auto">
@@ -33,7 +33,7 @@
               <!-- 简介 -->
               <div>
                 <p style="margin: 15px; font-style: italic">
-                  {{this.user.introduction}}
+                  {{ this.user.introduction }}
                 </p>
               </div>
               <div style="width: 90%; margin: auto">
@@ -94,46 +94,16 @@
               <div style="width: 90%; margin: auto">
                 <a-divider style="height: 2px; margin: 0" />
               </div>
-              <div style="overflow: scroll; height: 500px">
-                <v-md-preview :text="notice"></v-md-preview>
+              <div
+                style="
+                  overflow-y: scroll;
+                  height: 500px;
+                  background-color: rgb(255, 255, 255);
+                "
+              >
+                <MdPreview v-model="notice"></MdPreview>
               </div>
             </div>
-
-            <!-- 最热推荐 -->
-            <!-- <div
-              class="div-border-sty"
-              style="
-                margin-top: 20px;
-                background-color: rgba(255, 255, 255, 0.7);
-              "
-            >
-              <div style="padding: 10px">
-                <img
-                  src="../../assets/img/热度.svg"
-                  alt=""
-                  style="width: 30px"
-                />最热推荐
-              </div>
-              <div style="width: 90%; margin: auto">
-                <a-divider style="height: 2px; margin: 0" />
-              </div>
-              <div style="padding: 15px">
-                <div v-for="item in 10" :key="item" style="height: 80px">
-                  <router-link to="#">
-                    <div style="display: flex">
-                      <img
-                        src="../../assets/img/tx.jpg"
-                        alt=""
-                        style="width: 50px"
-                      />
-                      <span
-                        >个人博客搭建指南,西格玛男人永远不会调入女z第三节阿的快速健康了</span
-                      >
-                    </div>
-                  </router-link>
-                </div>
-              </div>
-            </div> -->
           </a-col>
 
           <a-col :span="17">
@@ -175,9 +145,10 @@
                             {{ item.tag }}
                           </a-tag>
                         </h3>
-                        <p style="text-indent: 2em">
+                        <p style="text-indent: 2em;max-width: 32vw">
                           {{ item.content }}
                         </p>
+
                       </div>
                       <div>
                         <span>
@@ -270,7 +241,7 @@
                 </div>
               </router-link>
             </div>
-            <div class="center-sty" >
+            <div class="center-sty">
               <el-pagination
                 layout="prev, pager, next,sizes"
                 :total="blogNum"
@@ -295,7 +266,8 @@ import "element-plus/es/components/pagination/style/css";
 import axios from "../../api/blog";
 import axios1 from "../../api/setting";
 import axios2 from "../../api/user";
-
+import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 export default {
   data() {
     return {
@@ -303,47 +275,40 @@ export default {
       pageSize: 5,
       blogNum: null,
       blog: [],
-      user:[],
+      user: [],
       notice: "",
       name: "公告",
     };
   },
   components: {
     ElPagination,
+    MdPreview,
   },
   methods: {
     handleCurrentChange() {
-      console.log(this.current);
-      console.log(this.pageSize);
       axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
-        (this.blog = res.data.data), console.log(res.data);
+        this.blog = res.data.data;
       });
     },
     handleSizeChange() {
-      console.log(this.pageSize);
-      console.log(this.current);
       axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
-        (this.blog = res.data.data), console.log(res.data);
+        this.blog = res.data.data;
       });
     },
   },
   mounted() {
     axios.getBlogInfoPage(this.current, this.pageSize).then((res) => {
       this.blog = res.data.data;
-      console.log(this.blog);
     });
     axios.getBlogNumber().then((res) => {
       this.blogNum = res.data.data;
-      console.log(this.blogNum);
     });
     axios1.getContent("公告").then((res) => {
       this.notice = res.data.data;
-      console.log(res.data);
     });
-    axios2.getUser().then((res)=>{
+    axios2.getUser().then((res) => {
       this.user = res.data.data;
-      console.log(res.data)
-    })
+    });
   },
 };
 </script>

@@ -25,7 +25,8 @@
         "
         class="div-border-sty"
       >
-        <v-md-preview :text="Messgae"></v-md-preview>
+        <!-- <v-md-preview :text="Messgae"></v-md-preview> -->
+        <MdPreview v-model="Messgae"></MdPreview>
         <div style="width: 90%; margin: auto">
           <a-divider style="height: 2px" />
         </div>
@@ -60,7 +61,7 @@
             >
               <a-input
                 v-model:value="CommentForm.email"
-                style="width: 26vw; margin-bottom: 1vh"
+                style="width: 25.5vw; margin-bottom: 1vh"
                 placeholder="必填"
               >
                 <template #addonBefore> 邮箱 </template>
@@ -125,6 +126,8 @@
 import { message } from "ant-design-vue";
 import axios1 from "../../api/message";
 import axios from "../../api/setting";
+import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 export default {
   data() {
     return {
@@ -140,7 +143,9 @@ export default {
       counter: 0,
     };
   },
-  components: {},
+  components: {
+    MdPreview
+  },
   methods: {
     onFinish() {
       axios1.postAddMessage(this.CommentForm).then((res) => {
